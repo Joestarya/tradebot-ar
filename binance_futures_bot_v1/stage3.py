@@ -40,6 +40,7 @@ def main() -> None:
 
     OUTPUT.mkdir(parents=True, exist_ok=True)
     results = []
+    accepted_position_reserved = False
     print("=" * 68)
     print("BINANCE FUTURES BOT - STAGE 3: SIGNAL GENERATION")
     print("READ-ONLY: no API calls, no leverage changes, no orders")
@@ -52,6 +53,14 @@ def main() -> None:
         if signal is None:
             print(f"[NO SIGNAL] {symbol}: conditions not fully aligned.")
             results.append({"symbol": symbol, "side": "NONE", "reason": "No valid setup"})
+            continue
+
+        if accepted_position_reserved:
+            print(f"[SKIP] {symbol}: another symbol already reserved as the single allowed position.")
+            results.append({
+                "symbol": symbol, "side": signal.side,
+                "reason": "Single-position limit; another candidate was selected first."
+            })
             continue
 
         sizing = calculate_position_size(
@@ -81,6 +90,8 @@ def main() -> None:
         print(f"             qty={sizing.quantity} notional={sizing.notional:.4f} "
               f"margin={sizing.margin_required:.4f} est_loss={sizing.estimated_loss:.4f}")
         print(f"             {sizing.reason}")
+        if sizing.accepted:
+            accepted_position_reserved = True
 
     out = OUTPUT / "latest_signals.csv"
     pd.DataFrame(results).to_csv(out, index=False)
