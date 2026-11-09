@@ -29,9 +29,9 @@ class RiskTests(unittest.TestCase):
 
 class StrategyTests(unittest.TestCase):
     def test_no_signal_when_trend_neutral(self):
+        # A flat 1h close series makes EMA20 == EMA50 and therefore neutral.
         rows = 60
-        close = [100 + (i % 2) * 0.01 for i in range(rows)]
-        df1h = pd.DataFrame({"close": close})
+        df1h = pd.DataFrame({"close": [100.0] * rows})
         df15 = pd.DataFrame({
             "close": [100.0] * 4, "high": [101.0] * 4,
             "low": [99.0] * 4, "rsi_14": [55.0] * 4,
