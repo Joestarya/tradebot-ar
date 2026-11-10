@@ -9,13 +9,13 @@ from src.backtest_4h import backtest_4h
 ROOT=Path(__file__).resolve().parent
 RAW=ROOT/"data"/"raw"
 OUT=ROOT/"data"/"backtest_4h"
-SYMBOLS=["BTCUSDT","ETHUSDT"]
+SYMBOLS=["BTCUSDT"]
 
 def main():
     p=argparse.ArgumentParser(description="Stage 5: 4H SMA50/200 + RSI14 experiment")
     p.add_argument("--days",type=int,default=730)
     p.add_argument("--balance-usdt",type=float,default=500.0,
-                   help="Starting balance for EACH independent symbol test; default 500 USDT")
+                   help="Starting balance for BTCUSDT backtest; default 500 USDT")
     p.add_argument("--risk",type=float,default=0.01,
                    help="Risk budget per trade as fraction of balance; default 0.01 (1%%), max 2%%")
     p.add_argument("--leverage",type=float,default=3.0,
@@ -38,7 +38,7 @@ def main():
     OUT.mkdir(parents=True,exist_ok=True)
     summaries=[]
     all_trades=[]
-    print(f"Settings: balance={a.balance_usdt} USDT per symbol | risk={a.risk:.2%} | leverage={a.leverage}x")
+    print(f"Settings: balance={a.balance_usdt} USDT | symbol=BTCUSDT | risk={a.risk:.2%} | leverage={a.leverage}x")
     for symbol in SYMBOLS:
         path=fetch_historical_klines(symbol,"4h",a.days,RAW)
         candles=pd.read_csv(path,parse_dates=["open_time","close_time"])
