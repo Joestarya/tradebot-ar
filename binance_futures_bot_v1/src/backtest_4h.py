@@ -14,7 +14,8 @@ def _record(symbol, pos, exit_price, exit_time, gross, exit_fee, net, reason, ba
 def backtest_4h(df: pd.DataFrame, symbol: str, initial_balance: float,
     risk_fraction: float=0.01, leverage: float=10.0, fee_rate: float=0.0005,
     slippage_rate: float=0.0002, atr_multiplier: float=2.0,
-    reward_risk: float=2.0, min_notional: float=5.0) -> tuple[pd.DataFrame,dict]:
+    reward_risk: float=2.0, min_notional: float=5.0,
+    quantity_step: float=0.001, min_quantity: float=0.001) -> tuple[pd.DataFrame,dict]:
     """Single-symbol 4H backtest; next-open fills; actual-fill SL/TP; stop-first ambiguity."""
     balance=float(initial_balance); pos=None; pending_entry=None; pending_exit=False; trades=[]
     for i in range(1,len(df)):
@@ -33,7 +34,7 @@ def backtest_4h(df: pd.DataFrame, symbol: str, initial_balance: float,
             sl=entry-dist if side=="LONG" else entry+dist
             tp=entry+reward_risk*dist if side=="LONG" else entry-reward_risk*dist
             size=calculate_position_size(balance,entry,sl,risk_fraction,leverage,fee_rate,
-                slippage_rate,0.001,0.001,min_notional)
+                slippage_rate,quantity_step,min_quantity,min_notional)
             if size.accepted:
                 pos={"side":side,"entry":entry,"entry_time":bar["open_time"],
                     "signal_time":pending_entry["signal_time"],"sl":sl,"tp":tp,
