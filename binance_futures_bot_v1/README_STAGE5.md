@@ -1,17 +1,16 @@
-# Stage 5 — 4H SMA 50/200 + RSI 14
+# Stage 5 — 4H SMA 50/200 crossover + RSI 14
 
 A separate experiment; Stage 3/4 remain unchanged.
 
 ## Rules
 - One timeframe only: 4h for indicators, signals, entries and exits.
 - SMA 50 and SMA 200 (simple moving averages).
-- RSI 14 uses Wilder RMA, the default TradingView RSI smoothing method.
-- Bull regime: SMA 50 > SMA 200. Bear regime: SMA 50 < SMA 200.
-- LONG: RSI crosses upward through 50 while bull regime is active.
-- SHORT: RSI crosses downward through 50 while bear regime is active.
-- Entry at next 4h open with adverse slippage.
+- RSI 14 uses Wilder RMA, TradingView's default RSI smoothing method.
+- LONG trigger: golden cross (SMA50 crosses above SMA200) AND RSI14 > 50 on the closed 4H candle.
+- SHORT trigger: death cross (SMA50 crosses below SMA200) AND RSI14 < 50 on the closed 4H candle.
+- Entry at next 4H open with adverse slippage.
 - Stop: 2 x ATR(14) from actual fill. Target: 2R from actual fill.
-- Exit at next 4h open after the MA regime flips against the position.
+- Exit at next 4H open after the opposite SMA regime is confirmed.
 - Entry candle is checked for SL/TP; if both are touched, SL is assumed first.
 - Risk sizing uses actual fill and stop; trades below minimum quantity/notional are skipped.
 
